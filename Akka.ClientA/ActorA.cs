@@ -23,27 +23,27 @@ namespace Akka.ClientA
             this.SubscribeFor(typeof(SomeMessage));
             this.Receive(typeof(SomeMessage), args => 
             {
-                System.Console.WriteLine("First message received by ActorA");
+                System.Console.WriteLine($"{nameof(SomeMessage)} received by ActorA");
                 this.Publish($"{args}");
             });
 
             this.SubscribeFor(typeof(OtherMessage));
             this.Receive(typeof(OtherMessage), args => 
             {
-                System.Console.WriteLine("First message received by ActorA");
+                System.Console.WriteLine($"{nameof(OtherMessage)} received by ActorA");
                 this.TellOther("/user/ActorB", new AnotherMessage());
             });
 
             this.Receive(typeof(AnotherMessage), args => 
             {
-                System.Console.WriteLine($"Message {args} received by ActorA");
+                System.Console.WriteLine($"{nameof(AnotherMessage)} received by ActorA");
                 var child = this.ActorOf(new ActorA());
                 child.Tell(true);
             });
 
             this.Receive(typeof(bool), args => 
             {
-                System.Console.WriteLine("Finally");
+                System.Console.WriteLine("Finally message directly from parent!");
             });
         }
     }

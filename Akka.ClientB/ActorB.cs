@@ -23,12 +23,12 @@ namespace Akka.ClientB
             this.SubscribeFor(typeof(string));
             this.Receive(typeof(string), args => 
             {
-                System.Console.WriteLine($"Message {args} received by ActorB");
+                System.Console.WriteLine($"{args} received by ActorB");
             });
 
             this.Receive(typeof(AnotherMessage), args => 
             {
-                System.Console.WriteLine($"Message {args} received by ActorB");
+                System.Console.WriteLine($"{nameof(AnotherMessage)} received by ActorB");
                 this.Respond(new AnotherMessage());
             });
         }

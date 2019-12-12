@@ -20,14 +20,14 @@ namespace Akka.Bootstrapper
 
             //Scenario #1
             Thread.Sleep(500);
-            actorSystem.EventStream.Publish(new SomeMessage());
             System.Console.WriteLine($"{nameof(SomeMessage)} published");
+            actorSystem.EventStream.Publish(new SomeMessage());
             Thread.Sleep(500);
 
             //Scenario #2
             Thread.Sleep(500);
-            actorSystem.EventStream.Publish(new OtherMessage());
             System.Console.WriteLine($"{nameof(OtherMessage)} published");
+            actorSystem.EventStream.Publish(new OtherMessage());
             Thread.Sleep(500);
         }
     }
