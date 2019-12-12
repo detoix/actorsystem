@@ -15,7 +15,7 @@ namespace Akka.Bootstrapper
             var actors = new IActor[] { new ActorA(), new ActorB() };
             foreach (var actor in actors)
             {
-                actorSystem.ActorOf(Props.Create<ActorWrapper>(actor), actor.Name);
+                ActorWrapper.Wrap(actor, actorSystem);
             }
 
             //Scenario #1
@@ -40,8 +40,16 @@ namespace Akka.Bootstrapper
             actor.Receive += (messageType, handler) => this.Receive(messageType, handler);
             actor.Respond += args => this.Sender.Tell(args);
             actor.Publish += @event => Context.System.EventStream.Publish(@event);
-            actor.Tell += (address, message) => Context.System.ActorSelection(address).Tell(message);
+            actor.TellOther += (address, message) => Context.System.ActorSelection(address).Tell(message);
+            actor.ActorOf += childActor => ActorWrapper.Wrap(childActor, Context);
             actor.SetUp();
+        }
+
+        public static IActor Wrap(IActor actor, IActorRefFactory factory)
+        {
+            var actorRef = factory.ActorOf(Props.Create<ActorWrapper>(actor), actor.Name);
+            actor.Send += (message) => actorRef.Tell(message);
+            return actor;
         }
     }
 }

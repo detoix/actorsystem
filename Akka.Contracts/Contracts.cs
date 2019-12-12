@@ -6,7 +6,9 @@ namespace Akka.Contracts
     public delegate void Receive(Type messageType, Action<object> handler);
     public delegate void Respond(object message);
     public delegate void Publish(object @event);
-    public delegate void Tell(string address, object message);
+    public delegate void TellOther(string address, object message);
+    public delegate void Send(object message);
+    public delegate IActor ActorOf(IActor obj);
 
     public interface IActor
     {
@@ -15,7 +17,10 @@ namespace Akka.Contracts
         event Receive Receive;
         event Respond Respond;
         event Publish Publish;
-        event Tell Tell;
+        event TellOther TellOther;
+        event Send Send;
+        event ActorOf ActorOf;
+        void Tell(object message);
         void SetUp();
     }
 

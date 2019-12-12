@@ -10,9 +10,13 @@ namespace Akka.ClientA
         public event Receive Receive;
         public event Respond Respond;
         public event Publish Publish;
-        public event Tell Tell;
+        public event TellOther TellOther;
+        public event Send Send;
+        public event ActorOf ActorOf;
 
         public ActorA() => this.Name = "ActorA";
+
+        public void Tell(object message) => this.Send(message);
 
         public void SetUp()
         {
@@ -27,12 +31,19 @@ namespace Akka.ClientA
             this.Receive(typeof(OtherMessage), args => 
             {
                 System.Console.WriteLine("First message received by ActorA");
-                this.Tell("/user/ActorB", new AnotherMessage());
+                this.TellOther("/user/ActorB", new AnotherMessage());
             });
 
             this.Receive(typeof(AnotherMessage), args => 
             {
                 System.Console.WriteLine($"Message {args} received by ActorA");
+                var child = this.ActorOf(new ActorA());
+                child.Tell(true);
+            });
+
+            this.Receive(typeof(bool), args => 
+            {
+                System.Console.WriteLine("Finally");
             });
         }
     }

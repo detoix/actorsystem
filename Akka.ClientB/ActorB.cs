@@ -10,9 +10,13 @@ namespace Akka.ClientB
         public event Receive Receive;
         public event Respond Respond;
         public event Publish Publish;
-        public event Tell Tell;
+        public event TellOther TellOther;
+        public event Send Send;
+        public event ActorOf ActorOf;
 
         public ActorB() => this.Name = "ActorB";
+
+        public void Tell(object message) => this.Send(message);
 
         public void SetUp()
         {
