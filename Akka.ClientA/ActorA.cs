@@ -5,7 +5,13 @@ namespace Akka.ClientA
 {
     public class ActorA : BaseActor
     {
-        public ActorA() : base("ActorA") { }
+        private IContainer Container { get; }
+        private IPersistenceService PersistenceService { get; }
+
+        public ActorA(IContainer container) : base("ActorA")
+        {
+            this.Container = container;
+        }
 
         public override void SetUp()
         {
@@ -26,7 +32,7 @@ namespace Akka.ClientA
             this.Receive<AnotherMessage>(args => 
             {
                 System.Console.WriteLine($"{nameof(AnotherMessage)} received by ActorA");
-                var child = this.ActorOf(new ActorA());
+                var child = this.ActorOf(new ActorA(this.Container));
                 child.Tell(true);
             });
 

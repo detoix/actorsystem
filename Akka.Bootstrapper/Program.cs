@@ -11,8 +11,9 @@ namespace Akka.Bootstrapper
     {
         static void Main(string[] args)
         {
+            var persistenceService = new Container();
             var actorSystem = ActorSystem.Create("FooSystem");
-            var actors = new BaseActor[] { new ActorA(), new ActorB() };
+            var actors = new BaseActor[] { new ActorA(persistenceService), new ActorB() };
             foreach (var actor in actors)
             {
                 ActorWrapper.Wrap(actor, actorSystem);
@@ -52,5 +53,12 @@ namespace Akka.Bootstrapper
             actor.TellInvoked += (message) => actorRef.Tell(message);
             return actor;
         }
+    }
+
+    class Container : IContainer
+    {
+        public IPersistenceService PersistenceService => null;
+
+        public IPresentationService PresentationService => null;
     }
 }

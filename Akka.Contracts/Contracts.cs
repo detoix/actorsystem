@@ -58,4 +58,20 @@ namespace Akka.Contracts
     {
 
     }
+
+    public interface IContainer
+    {
+        IPersistenceService PersistenceService { get; }
+        IPresentationService PresentationService { get; }
+    }
+
+    public interface IPresentationService
+    {
+        
+    }
+
+    public interface IPersistenceService
+    {
+        
+    }
 }
