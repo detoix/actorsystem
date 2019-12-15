@@ -12,7 +12,7 @@ namespace Akka.Bootstrapper
         static void Main(string[] args)
         {
             var actorSystem = ActorSystem.Create("FooSystem");
-            var actors = new IActor[] { new ActorA(), new ActorB() };
+            var actors = new BaseActor[] { new ActorA(), new ActorB() };
             foreach (var actor in actors)
             {
                 ActorWrapper.Wrap(actor, actorSystem);
@@ -34,21 +34,22 @@ namespace Akka.Bootstrapper
 
     class ActorWrapper : ReceiveActor
     {
-        public ActorWrapper(IActor actor)
+        public ActorWrapper(BaseActor actor)
         {
-            actor.SubscribeFor += channel => Context.System.EventStream.Subscribe(this.Self, channel);
-            actor.Receive += (messageType, handler) => this.Receive(messageType, handler);
-            actor.Respond += args => this.Sender.Tell(args);
-            actor.Publish += @event => Context.System.EventStream.Publish(@event);
-            actor.TellOther += (address, message) => Context.System.ActorSelection(address).Tell(message);
-            actor.ActorOf += childActor => ActorWrapper.Wrap(childActor, Context);
+            actor.SubscribeForInvoked += channel => Context.System.EventStream.Subscribe(this.Self, channel);
+            actor.ReceiveInvoked += (messageType, handler) => this.Receive(messageType, handler);
+            actor.RespondInvoked += args => this.Sender.Tell(args);
+            actor.PublishInvoked += @event => Context.System.EventStream.Publish(@event);
+            actor.TellOtherInvoked += (address, message) => Context.System.ActorSelection(address).Tell(message);
+            actor.AskInvoked += (address, message, timeout) => Context.System.ActorSelection(address).Ask(message, timeout);
+            actor.ActorOfInvoked += childActor => ActorWrapper.Wrap(childActor, Context);
             actor.SetUp();
         }
 
-        public static IActor Wrap(IActor actor, IActorRefFactory factory)
+        public static BaseActor Wrap(BaseActor actor, IActorRefFactory factory)
         {
             var actorRef = factory.ActorOf(Props.Create<ActorWrapper>(actor), actor.Name);
-            actor.Send += (message) => actorRef.Tell(message);
+            actor.TellInvoked += (message) => actorRef.Tell(message);
             return actor;
         }
     }

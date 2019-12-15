@@ -3,33 +3,28 @@ using Akka.Contracts;
 
 namespace Akka.ClientB
 {
-    public class ActorB : IActor
+    public class ActorB : BaseActor
     {
-        public string Name { get; }
-        public event SubscribeFor SubscribeFor;
-        public event Receive Receive;
-        public event Respond Respond;
-        public event Publish Publish;
-        public event TellOther TellOther;
-        public event Send Send;
-        public event ActorOf ActorOf;
+        public ActorB() : base("ActorB") { }
 
-        public ActorB() => this.Name = "ActorB";
-
-        public void Tell(object message) => this.Send(message);
-
-        public void SetUp()
+        public override void SetUp()
         {
-            this.SubscribeFor(typeof(string));
-            this.Receive(typeof(string), args => 
+            this.SubscribeFor<string>();
+            this.Receive<string>(args => 
             {
                 System.Console.WriteLine($"{args} received by ActorB");
             });
 
-            this.Receive(typeof(AnotherMessage), args => 
+            this.Receive<AnotherMessage>(args => 
             {
                 System.Console.WriteLine($"{nameof(AnotherMessage)} received by ActorB");
                 this.Respond(new AnotherMessage());
+            });
+
+            this.Receive<int>(args => 
+            {
+                System.Console.WriteLine($"{args} received by ActorB");
+                this.Respond("Some response");
             });
         }
     }
