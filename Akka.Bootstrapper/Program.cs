@@ -40,9 +40,10 @@ namespace Akka.Bootstrapper
             actor.SubscribeForInvoked += channel => Context.System.EventStream.Subscribe(this.Self, channel);
             actor.ReceiveInvoked += (messageType, handler) => this.Receive(messageType, handler);
             actor.RespondInvoked += args => this.Sender.Tell(args);
+            actor.AskSenderForInvoked += (message, timeout) => this.Sender.Ask(message, timeout);
             actor.PublishInvoked += @event => Context.System.EventStream.Publish(@event);
             actor.TellOtherInvoked += (address, message) => Context.System.ActorSelection(address).Tell(message);
-            actor.AskInvoked += (address, message, timeout) => Context.System.ActorSelection(address).Ask(message, timeout);
+            actor.AskForInvoked += (address, message, timeout) => Context.System.ActorSelection(address).Ask(message, timeout);
             actor.ActorOfInvoked += childActor => ActorWrapper.Wrap(childActor, Context);
             actor.SetUp();
         }

@@ -26,7 +26,7 @@ namespace Akka.ClientA
             this.Receive<OtherMessage>(args => 
             {
                 System.Console.WriteLine($"{nameof(OtherMessage)} received by ActorA");
-                this.TellOther("/user/ActorB", new AnotherMessage());
+                this.Tell("/user/ActorB", new AnotherMessage());
             });
 
             this.Receive<AnotherMessage>(args => 
@@ -39,8 +39,8 @@ namespace Akka.ClientA
             this.Receive<bool>(async args => 
             {
                 System.Console.WriteLine("Finally message directly from parent!");
-                this.TellOther("/user/ActorB", "Simple message");
-                var response = await this.Ask("/user/ActorB", 122);
+                this.Tell("/user/ActorB", "Simple message");
+                var response = await this.AskFor<bool>("/user/ActorB", 122);
                 System.Console.WriteLine($"{response} received by ActorA");
             });
         }

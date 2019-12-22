@@ -6,9 +6,10 @@ namespace Akka.Contracts
     public delegate void SubscribeFor(Type channel);
     public delegate void Receive(Type messageType, Action<object> handler);
     public delegate void Respond(object message);
+    public delegate Task<object> AskSenderFor(object message, TimeSpan? timeout = null);
     public delegate void Publish(object @event);
     public delegate void TellOther(string address, object message);
-    public delegate Task<object> Ask(string address, object message, TimeSpan? timeout = null);
+    public delegate Task<object> AskFor(string address, object message, TimeSpan? timeout = null);
     public delegate void Tell(object message);
     public delegate BaseActor ActorOf(BaseActor obj);
 
@@ -24,15 +25,18 @@ namespace Akka.Contracts
         public event Respond RespondInvoked;
         protected void Respond(object message)
             => this.RespondInvoked(message);
+        public event AskSenderFor AskSenderForInvoked;
+        protected Task<T> AskSenderFor<T>(object message, TimeSpan? timeout = null)
+            => this.Convert<T>(this.AskSenderForInvoked(message, timeout));
         public event Publish PublishInvoked;
         protected void Publish(object @event)
             => this.PublishInvoked(@event);
         public event TellOther TellOtherInvoked;
-        protected void TellOther(string address, object message)
+        protected void Tell(string address, object message)
             => this.TellOtherInvoked(address, message);
-        public event Ask AskInvoked;
-        protected Task<object> Ask(string address, object message, TimeSpan? timeout = null)
-            => this.AskInvoked(address, message, timeout);
+        public event AskFor AskForInvoked;
+        protected Task<T> AskFor<T>(string address, object message, TimeSpan? timeout = null)
+            => this.Convert<T>(this.AskForInvoked(address, message, timeout));
         public event Tell TellInvoked;
         public void Tell(object message) 
             => this.TellInvoked(message);
@@ -42,6 +46,9 @@ namespace Akka.Contracts
 
         protected BaseActor(string name) => this.Name = name;
         public abstract void SetUp();
+
+        private async Task<T> Convert<T>(Task<object> task)
+            => await task is T result ? result : default;
     }
 
     public class SomeMessage
