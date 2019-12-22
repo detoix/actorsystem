@@ -4,6 +4,7 @@ using Akka.ClientB;
 using Akka.Actor;
 using System.Threading;
 using Akka.Contracts;
+using Akka.Configuration;
 
 namespace Akka.Bootstrapper
 {
@@ -11,8 +12,31 @@ namespace Akka.Bootstrapper
     {
         static void Main(string[] args)
         {
+            var config = ConfigurationFactory.ParseString(@"
+                akka {
+                    loglevel = OFF
+
+                    actor {
+                        provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
+                        debug {
+                        receive = on
+                        autoreceive = on
+                        lifecycle = on
+                        event-stream = on
+                        unhandled = on
+                        }
+                    }
+
+                    remote {
+                        dot-netty.tcp {
+                        port = 0 # bound to a dynamic port assigned by the OS
+                        hostname = localhost
+                        }
+                    }
+                }");
+
             var persistenceService = new Container();
-            var actorSystem = ActorSystem.Create("FooSystem");
+            var actorSystem = ActorSystem.Create("FooSystem", config);
             var actors = new BaseActor[] { new ActorA(persistenceService), new ActorB() };
             foreach (var actor in actors)
             {
@@ -29,7 +53,12 @@ namespace Akka.Bootstrapper
             Thread.Sleep(500);
             System.Console.WriteLine($"{nameof(OtherMessage)} published");
             actorSystem.EventStream.Publish(new OtherMessage());
-            Thread.Sleep(500);
+            
+            for (int i = 10; i > 0; i--)
+            {
+                System.Console.WriteLine(i);
+                Thread.Sleep(500);
+            }
         }
     }
 

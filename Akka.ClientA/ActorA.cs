@@ -42,6 +42,9 @@ namespace Akka.ClientA
                 this.Tell("/user/ActorB", "Simple message");
                 var response = await this.AskFor<bool>("/user/ActorB", 122);
                 System.Console.WriteLine($"{response} received by ActorA");
+
+                var answer = await this.AskFor<string>("akka.tcp://RemoteActorSystem@localhost:8080/user/RemoteActor", "message");
+                System.Console.WriteLine($"Received echo from remote actor - {answer}");
             });
         }
     }
