@@ -1,4 +1,4 @@
 FROM mcr.microsoft.com/dotnet/core/runtime:3.0
-COPY prod/ prod/
+COPY publish/ publish/
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "prod/Akka.RemoteSystem.dll"]
+ENTRYPOINT ["dotnet", "publish/Akka.RemoteSystem.dll"]
