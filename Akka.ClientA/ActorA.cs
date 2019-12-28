@@ -6,7 +6,6 @@ namespace Akka.ClientA
     public class ActorA : BaseActor
     {
         private IContainer Container { get; }
-        private IPersistenceService PersistenceService { get; }
 
         public ActorA(IContainer container) : base("ActorA")
         {
@@ -42,9 +41,17 @@ namespace Akka.ClientA
                 this.Tell("/user/ActorB", "Simple message");
                 var response = await this.AskFor<bool>("/user/ActorB", 122);
                 System.Console.WriteLine($"{response} received by ActorA");
+            });
 
-                var answer = await this.AskFor<string>("akka.tcp://RemoteActorSystem@localhost:8080/user/RemoteActor", "message");
-                System.Console.WriteLine($"Received echo from remote actor - {answer}");
+            this.SubscribeFor<SearchBomsFor>();
+            this.Receive<SearchBomsFor>(args =>
+            {
+                this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new[] { "aaa", "bbb", "ccc" });
+            });
+
+            this.Receive<int[]>(args =>
+            {
+                System.Console.WriteLine($"Received echo from remote actor - {string.Join(" ", args)}");
             });
         }
     }

@@ -26,20 +26,22 @@ namespace Akka.RemoteSystem
 
                     remote {
                         dot-netty.tcp {
-                        port = 8080
-                        hostname = localhost
+                            port = 8080
+                            hostname = ""0.0.0.0""
                         }
                     }
                 }");
 
-            var remoteSystem = ActorSystem.Create("RemoteActorSystem", config);
-            var actor = remoteSystem.ActorOf(Props.Create<RemoteActor>(), "RemoteActor");
-            System.Console.WriteLine("Actor created...");
-
-            for (int i = 20; i > 0; i--)
+            using (var remoteSystem = ActorSystem.Create("RemoteActorSystem", config))
             {
-                System.Console.WriteLine(i);
-                Thread.Sleep(1000);
+                var actor = remoteSystem.ActorOf(Props.Create<RemoteActor>(), "RemoteActor");
+                System.Console.WriteLine("Actor created...");
+
+                for (int i = 20; i > 0; i--)
+                {
+                    System.Console.WriteLine(i);
+                    Thread.Sleep(1000);
+                }
             }
         }
     }
@@ -48,10 +50,14 @@ namespace Akka.RemoteSystem
     {
         public RemoteActor()
         {
-            this.Receive<string>(message => 
+            Context.System.EventStream.Subscribe(this.Self, typeof(string));
+            this.Receive<string[]>(args => 
             {
-                System.Console.WriteLine($"Received {message}");
-                this.Sender.Tell(message);
+                System.Console.WriteLine($"Received {string.Join(" ", args)}");
+                
+                //data processing
+
+                this.Sender.Tell(new[] { 12, 123 });
             });
         }
     }

@@ -66,6 +66,16 @@ namespace Akka.Contracts
 
     }
 
+    public class SearchBomsFor
+    {
+        public string Text { get; }
+
+        public SearchBomsFor(string text)
+        {
+            this.Text = text;
+        }
+    }
+
     public interface IContainer
     {
         IPersistenceService PersistenceService { get; }

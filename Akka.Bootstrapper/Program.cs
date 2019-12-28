@@ -29,8 +29,8 @@ namespace Akka.Bootstrapper
 
                     remote {
                         dot-netty.tcp {
-                        port = 0 # bound to a dynamic port assigned by the OS
-                        hostname = localhost
+                            port = 0 # bound to a dynamic port assigned by the OS
+                            hostname = localhost
                         }
                     }
                 }");
@@ -53,6 +53,9 @@ namespace Akka.Bootstrapper
             Thread.Sleep(500);
             System.Console.WriteLine($"{nameof(OtherMessage)} published");
             actorSystem.EventStream.Publish(new OtherMessage());
+
+            //Scenario #3
+            actorSystem.EventStream.Publish(new SearchBomsFor("some text"));
             
             for (int i = 10; i > 0; i--)
             {
