@@ -1,3 +1,5 @@
 FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 COPY publish/ publish/
-ENTRYPOINT ["dotnet", "publish/Akka.RemoteSystem.dll"]
+RUN useradd -m myuser
+USER myuser
+CMD dotnet publish/Akka.RemoteSystem.dll -e PORT=$PORT

@@ -13,7 +13,6 @@ namespace Akka.RemoteSystem
             foreach(var path in Directory.GetDirectories(@"/sys"))
             {
                 Console.WriteLine(path); // full path
-                //Console.WriteLine(System.IO.Path.GetFileName(path)); // file name
             }
 
             var config = ConfigurationFactory.ParseString(@"
@@ -33,11 +32,11 @@ namespace Akka.RemoteSystem
 
                     remote {
                         dot-netty.tcp {
-                            port = 8080
+                            port = #PORT
                             hostname = ""0.0.0.0""
                         }
                     }
-                }");
+                }".Replace("#PORT", Environment.GetEnvironmentVariable("PORT")));
 
             using (var remoteSystem = ActorSystem.Create("RemoteActorSystem", config))
             {
