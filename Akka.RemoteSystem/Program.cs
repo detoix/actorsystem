@@ -2,6 +2,7 @@
 using Akka.Actor;
 using System.Threading;
 using Akka.Configuration;
+using System.IO;
 
 namespace Akka.RemoteSystem
 {
@@ -9,6 +10,12 @@ namespace Akka.RemoteSystem
     {
         static void Main(string[] args)
         {
+            foreach(var path in Directory.GetDirectories(@"/sys"))
+            {
+                Console.WriteLine(path); // full path
+                //Console.WriteLine(System.IO.Path.GetFileName(path)); // file name
+            }
+
             var config = ConfigurationFactory.ParseString(@"
                 akka {
                     loglevel = OFF
