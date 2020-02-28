@@ -10,11 +10,6 @@ namespace Akka.RemoteSystem
     {
         static void Main(string[] args)
         {
-            foreach(var path in Directory.GetDirectories(@"/sys"))
-            {
-                Console.WriteLine(path); // full path
-            }
-
             var config = ConfigurationFactory.ParseString(@"
                 akka {
                     loglevel = OFF
@@ -36,9 +31,9 @@ namespace Akka.RemoteSystem
                             hostname = ""0.0.0.0""
                         }
                     }
-                }".Replace("#PORT", Environment.GetEnvironmentVariable("PORT")));
+                }".Replace("#PORT", Environment.GetEnvironmentVariable("PORT") ?? "8080"));
 
-            using (var remoteSystem = ActorSystem.Create("RemoteActorSystem", config))
+            using (var remoteSystem = ActorSystem.Create("RemoteActorSystem"))
             {
                 var actor = remoteSystem.ActorOf(Props.Create<RemoteActor>(), "RemoteActor");
                 System.Console.WriteLine("Actor created...");
