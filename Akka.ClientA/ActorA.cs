@@ -39,7 +39,7 @@ namespace Akka.ClientA
             {
                 System.Console.WriteLine("Finally message directly from parent!");
                 this.Tell("/user/ActorB", "Simple message");
-                var response = await this.AskFor<bool>("/user/ActorB", 122);
+                var response = await this.AskFor<string>("/user/ActorB", 122);
                 System.Console.WriteLine($"{response} received by ActorA");
             });
 
