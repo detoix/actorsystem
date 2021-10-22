@@ -46,6 +46,7 @@ namespace Akka.ClientA
             this.SubscribeFor<SearchBomsFor>();
             this.Receive<SearchBomsFor>(args =>
             {
+                System.Console.WriteLine($"ActorA received {nameof(SearchBomsFor)}, forwarding to remote...");
                 this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new[] { "aaa", "bbb", "ccc" });
             });
 
