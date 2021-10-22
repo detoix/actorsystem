@@ -33,7 +33,7 @@ namespace Akka.RemoteSystem
                     }
                 }".Replace("#PORT", Environment.GetEnvironmentVariable("PORT") ?? "8080"));
 
-            using (var remoteSystem = ActorSystem.Create("RemoteActorSystem"))
+            using (var remoteSystem = ActorSystem.Create("RemoteActorSystem", config))
             {
                 var actor = remoteSystem.ActorOf(Props.Create<RemoteActor>(), "RemoteActor");
                 System.Console.WriteLine("Actor created...");
