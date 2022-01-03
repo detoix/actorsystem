@@ -44,21 +44,12 @@ namespace Akka.ClientA
                 System.Console.WriteLine($"{response} received by ActorA");
             });
 
-            this.SubscribeFor<SearchBomsFor>();
-            this.Receive<SearchBomsFor>(args =>
+            this.SubscribeFor<SearchFor>();
+            this.Receive<SearchFor>(args =>
             {
-                System.Console.WriteLine($"ActorA received {nameof(SearchBomsFor)}, forwarding to remote...");
+                System.Console.WriteLine($"ActorA received {nameof(SearchFor)}, forwarding to remote...");
                 this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new[] { "aaa", "bbb", "ccc" });
-
-                System.Console.WriteLine($"dddddd...");
-
-                this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new Data() {
-                    Foo = "a"
-                });
-                
-                this.Publish(new Data() {
-                    Foo = "c"
-                });
+                this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new Data() { Foo = "dto_content" });
             });
 
             this.Receive<int[]>(args =>

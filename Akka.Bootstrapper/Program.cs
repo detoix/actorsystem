@@ -68,7 +68,7 @@ namespace Akka.Bootstrapper
                 {
                     //Scenario #3
                     System.Console.WriteLine("Executing scenario: 3");
-                    actorSystem.EventStream.Publish(new SearchBomsFor("some text"));
+                    actorSystem.EventStream.Publish(new SearchFor("some text"));
                 }
             } while (key != ConsoleKey.Escape);
         }

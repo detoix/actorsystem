@@ -66,11 +66,11 @@ namespace Akka.Contracts
 
     }
 
-    public class SearchBomsFor
+    public class SearchFor
     {
         public string Text { get; }
 
-        public SearchBomsFor(string text)
+        public SearchFor(string text)
         {
             this.Text = text;
         }
