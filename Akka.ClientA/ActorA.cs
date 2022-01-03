@@ -50,8 +50,6 @@ namespace Akka.ClientA
                 System.Console.WriteLine($"ActorA received {nameof(SearchBomsFor)}, forwarding to remote...");
                 this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new[] { "aaa", "bbb", "ccc" });
 
-                Thread.Sleep(6000);
-
                 System.Console.WriteLine($"dddddd...");
 
                 this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new Data() {

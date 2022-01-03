@@ -39,11 +39,8 @@ namespace Akka.RemoteSystem
                 var actor = remoteSystem.ActorOf(Props.Create<RemoteActor>(), "RemoteActor");
                 System.Console.WriteLine("Actor created...");
 
-                for (int i = 20; i > 0; i--)
-                {
-                    System.Console.WriteLine(i);
-                    Thread.Sleep(1000);
-                }
+                Console.WriteLine("Press any key to stop...");
+                Console.ReadKey();
             }
         }
     }

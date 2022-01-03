@@ -44,28 +44,33 @@ namespace Akka.Bootstrapper
             {
                 ActorWrapper.Wrap(actor, actorSystem);
             }
-
-            //Scenario #1
-            Thread.Sleep(500);
-            System.Console.WriteLine($"{nameof(SomeMessage)} published");
-            actorSystem.EventStream.Publish(new SomeMessage());
-            Thread.Sleep(500);
-
-            //Scenario #2
-            Thread.Sleep(500);
-            System.Console.WriteLine($"{nameof(OtherMessage)} published");
-            actorSystem.EventStream.Publish(new OtherMessage());
-
-            //Scenario #3
-            actorSystem.EventStream.Publish(new SearchBomsFor("some text"));
             
+            var key = default(ConsoleKey);
+
             do 
             {
-                while (! Console.KeyAvailable) 
+                key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.D1)
                 {
-                    Thread.Sleep(500);
-                }       
-            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+                    //Scenario #1
+                    System.Console.WriteLine("Executing scenario: 1");
+                    System.Console.WriteLine($"{nameof(SomeMessage)} published");
+                    actorSystem.EventStream.Publish(new SomeMessage());
+                }
+                else if (key == ConsoleKey.D2)
+                {
+                    //Scenario #2
+                    System.Console.WriteLine("Executing scenario: 2");
+                    System.Console.WriteLine($"{nameof(OtherMessage)} published");
+                    actorSystem.EventStream.Publish(new OtherMessage());
+                }
+                else if (key == ConsoleKey.D3)
+                {
+                    //Scenario #3
+                    System.Console.WriteLine("Executing scenario: 3");
+                    actorSystem.EventStream.Publish(new SearchBomsFor("some text"));
+                }
+            } while (key != ConsoleKey.Escape);
         }
     }
 
