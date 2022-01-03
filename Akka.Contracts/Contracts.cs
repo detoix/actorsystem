@@ -91,4 +91,9 @@ namespace Akka.Contracts
     {
         
     }
+
+    public class Data
+    {
+        public string Foo { get; set; }
+    }
 }

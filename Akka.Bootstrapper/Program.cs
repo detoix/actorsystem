@@ -12,6 +12,8 @@ namespace Akka.Bootstrapper
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Press ESC to quit");
+
             var config = ConfigurationFactory.ParseString(@"
                 akka {
                     loglevel = OFF
@@ -57,11 +59,13 @@ namespace Akka.Bootstrapper
             //Scenario #3
             actorSystem.EventStream.Publish(new SearchBomsFor("some text"));
             
-            for (int i = 10; i > 0; i--)
+            do 
             {
-                System.Console.WriteLine(i);
-                Thread.Sleep(500);
-            }
+                while (! Console.KeyAvailable) 
+                {
+                    Thread.Sleep(500);
+                }       
+            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
         }
     }
 

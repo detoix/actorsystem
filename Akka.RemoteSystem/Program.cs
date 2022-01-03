@@ -1,4 +1,5 @@
 ﻿using System;
+using Akka.Contracts;
 using Akka.Actor;
 using System.Threading;
 using Akka.Configuration;
@@ -51,7 +52,6 @@ namespace Akka.RemoteSystem
     {
         public RemoteActor()
         {
-            Context.System.EventStream.Subscribe(this.Self, typeof(string));
             this.Receive<string[]>(args => 
             {
                 System.Console.WriteLine($"Received {string.Join(" ", args)}");
@@ -59,6 +59,12 @@ namespace Akka.RemoteSystem
                 //data processing
 
                 this.Sender.Tell(new[] { 12, 123 });
+            });
+
+            Context.System.EventStream.Subscribe(this.Self, typeof(Data));
+            this.Receive<Data>(args =>
+            {
+                System.Console.WriteLine($"Received {args.Foo}");
             });
         }
     }

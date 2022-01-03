@@ -10,4 +10,8 @@
     <PackageReference Include="Akka.Remote" Version="1.4.0-beta3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Akka.Contracts\Akka.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

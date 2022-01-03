@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Akka.Contracts;
 
 namespace Akka.ClientA
@@ -48,6 +49,18 @@ namespace Akka.ClientA
             {
                 System.Console.WriteLine($"ActorA received {nameof(SearchBomsFor)}, forwarding to remote...");
                 this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new[] { "aaa", "bbb", "ccc" });
+
+                Thread.Sleep(6000);
+
+                System.Console.WriteLine($"dddddd...");
+
+                this.Tell("akka.tcp://RemoteActorSystem@0.0.0.0:8080/user/RemoteActor", new Data() {
+                    Foo = "a"
+                });
+                
+                this.Publish(new Data() {
+                    Foo = "c"
+                });
             });
 
             this.Receive<int[]>(args =>
