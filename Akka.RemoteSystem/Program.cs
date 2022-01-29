@@ -63,10 +63,18 @@ namespace Akka.RemoteSystem
             {
                 System.Console.WriteLine($"Received {args.Foo}");
 
-                // var child = Context.ActorOf<UntrustedActor>("child_name");
-                // child.Tell("wake up");
+                var child = Context.ActorOf<UntrustedActor>("child_name");
+                child.Tell("wake up");
             });
         }
+
+        protected override SupervisorStrategy SupervisorStrategy()
+            => new OneForOneStrategy(localOnlyDecider: ex =>
+                {
+                    System.Console.WriteLine($"Child actor tells that it '{ex.Message}'");
+                    System.Console.WriteLine($"We decide to stop it forever...");
+                    return Directive.Stop;
+                });
     }
 
     class UntrustedActor : ReceiveActor
@@ -75,11 +83,9 @@ namespace Akka.RemoteSystem
         {
             this.Receive<string>(args =>
             {
-                System.Console.WriteLine($"Received {args} message");
+                System.Console.WriteLine($"{nameof(UntrustedActor)} received {args} message");
 
-                throw new NotSupportedException();
-
-                System.Console.WriteLine($"This should not be fired");
+                throw new NotSupportedException("cannot process message");
             });
         }
     }
