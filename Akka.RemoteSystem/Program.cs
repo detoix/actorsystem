@@ -16,6 +16,7 @@ namespace Akka.RemoteSystem
                     loglevel = OFF
 
                     actor {
+                        guardian-supervisor-strategy = " + $"\"{typeof(AlwaysResume).AssemblyQualifiedName}\"" + @"
                         provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
                         debug {
                         receive = on
@@ -63,30 +64,18 @@ namespace Akka.RemoteSystem
             {
                 System.Console.WriteLine($"Received {args.Foo}");
 
-                var child = Context.ActorOf<UntrustedActor>("child_name");
-                child.Tell("wake up");
-            });
-        }
-
-        protected override SupervisorStrategy SupervisorStrategy()
-            => new OneForOneStrategy(localOnlyDecider: ex =>
-                {
-                    System.Console.WriteLine($"Child actor tells that it '{ex.Message}'");
-                    System.Console.WriteLine($"We decide to stop it forever...");
-                    return Directive.Stop;
-                });
-    }
-
-    class UntrustedActor : ReceiveActor
-    {
-        public UntrustedActor()
-        {
-            this.Receive<string>(args =>
-            {
-                System.Console.WriteLine($"{nameof(UntrustedActor)} received {args} message");
-
                 throw new NotSupportedException("cannot process message");
             });
         }
+    }
+
+    class AlwaysResume : SupervisorStrategyConfigurator
+    {
+        public override SupervisorStrategy Create() => new OneForOneStrategy(localOnlyDecider: ex =>
+        {
+            System.Console.WriteLine($"Child actor tells that it '{ex.Message}'");
+            System.Console.WriteLine($"We decide to resume its functions...");
+            return Directive.Resume;
+        });
     }
 }
