@@ -93,6 +93,7 @@ namespace Akka.Bootstrapper
         {
             var actorRef = factory.ActorOf(Props.Create<ActorWrapper>(actor), actor.Name);
             actor.TellInvoked += (message) => actorRef.Tell(message);
+            actor.StopInvoked += () => actorRef.GracefulStop(TimeSpan.Zero);
             return actor;
         }
     }

@@ -42,6 +42,7 @@ namespace Akka.ClientA
                 this.Tell("/user/ActorB", "Simple message");
                 var response = await this.AskFor<string>("/user/ActorB", 122);
                 System.Console.WriteLine($"{response} received by ActorA");
+                this.Stop();
             });
 
             this.SubscribeFor<SearchFor>();

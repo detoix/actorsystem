@@ -62,6 +62,24 @@ namespace Akka.RemoteSystem
             this.Receive<Data>(args =>
             {
                 System.Console.WriteLine($"Received {args.Foo}");
+
+                // var child = Context.ActorOf<UntrustedActor>("child_name");
+                // child.Tell("wake up");
+            });
+        }
+    }
+
+    class UntrustedActor : ReceiveActor
+    {
+        public UntrustedActor()
+        {
+            this.Receive<string>(args =>
+            {
+                System.Console.WriteLine($"Received {args} message");
+
+                throw new NotSupportedException();
+
+                System.Console.WriteLine($"This should not be fired");
             });
         }
     }

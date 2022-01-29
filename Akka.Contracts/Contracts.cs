@@ -11,6 +11,7 @@ namespace Akka.Contracts
     public delegate void TellOther(string address, object message);
     public delegate Task<object> AskFor(string address, object message, TimeSpan? timeout = null);
     public delegate void Tell(object message);
+    public delegate void Stop();
     public delegate BaseActor ActorOf(BaseActor obj);
 
     public abstract class BaseActor
@@ -43,6 +44,9 @@ namespace Akka.Contracts
         public event ActorOf ActorOfInvoked;
         protected BaseActor ActorOf(BaseActor actor) 
             => this.ActorOfInvoked(actor);
+        public event Stop StopInvoked;
+        public void Stop()
+            => this.StopInvoked();
 
         protected BaseActor(string name) => this.Name = name;
         public abstract void SetUp();
