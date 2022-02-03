@@ -12,18 +12,18 @@ namespace Akka.ClientB
             this.SubscribeFor<string>();
             this.Receive<string>(args => 
             {
-                System.Console.WriteLine($"{args} received by ActorB");
+                System.Console.WriteLine($"Actor B: received {args}");
             });
 
             this.Receive<AnotherMessage>(args => 
             {
-                System.Console.WriteLine($"{nameof(AnotherMessage)} received by ActorB");
+                System.Console.WriteLine($"Actor B: received {nameof(AnotherMessage)}");
                 this.Respond(new AnotherMessage());
             });
 
             this.Receive<int>(args => 
             {
-                System.Console.WriteLine($"{args} received by ActorB");
+                System.Console.WriteLine($"Actor B: received {args}");
                 this.Respond("Some response");
             });
         }

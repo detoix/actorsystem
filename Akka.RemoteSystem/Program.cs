@@ -52,7 +52,7 @@ namespace Akka.RemoteSystem
         {
             this.Receive<string[]>(args => 
             {
-                System.Console.WriteLine($"Received {string.Join(" ", args)}");
+                System.Console.WriteLine($"Remote: received {string.Join(" ", args)}");
                 
                 //data processing
 
@@ -62,7 +62,7 @@ namespace Akka.RemoteSystem
             Context.System.EventStream.Subscribe(this.Self, typeof(Data));
             this.Receive<Data>(args =>
             {
-                System.Console.WriteLine($"Received {args.Foo}");
+                System.Console.WriteLine($"Remote: received {args.Foo}");
 
                 throw new NotSupportedException("cannot process message");
             });
@@ -73,8 +73,8 @@ namespace Akka.RemoteSystem
     {
         public override SupervisorStrategy Create() => new OneForOneStrategy(localOnlyDecider: ex =>
         {
-            System.Console.WriteLine($"Child actor tells that it '{ex.Message}'");
-            System.Console.WriteLine($"We decide to resume its functions...");
+            System.Console.WriteLine($"Remote supervisor: child actor tells that it '{ex.Message}'");
+            System.Console.WriteLine($"Remote supervisor: we decide to resume its functions...");
             return Directive.Resume;
         });
     }

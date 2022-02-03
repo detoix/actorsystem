@@ -54,20 +54,21 @@ namespace Akka.Bootstrapper
                 {
                     //Scenario #1
                     System.Console.WriteLine("Executing scenario: 1");
-                    System.Console.WriteLine($"{nameof(SomeMessage)} published");
+                    System.Console.WriteLine($"Eventstream: published {nameof(SomeMessage)}");
                     actorSystem.EventStream.Publish(new SomeMessage());
                 }
                 else if (key == ConsoleKey.D2)
                 {
                     //Scenario #2
                     System.Console.WriteLine("Executing scenario: 2");
-                    System.Console.WriteLine($"{nameof(OtherMessage)} published");
+                    System.Console.WriteLine($"Eventstream: published {nameof(OtherMessage)}");
                     actorSystem.EventStream.Publish(new OtherMessage());
                 }
                 else if (key == ConsoleKey.D3)
                 {
                     //Scenario #3
                     System.Console.WriteLine("Executing scenario: 3");
+                    System.Console.WriteLine($"Eventstream: published {nameof(SearchFor)}");
                     actorSystem.EventStream.Publish(new SearchFor("some text"));
                 }
             } while (key != ConsoleKey.Escape);
