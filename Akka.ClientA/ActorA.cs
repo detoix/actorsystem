@@ -20,6 +20,9 @@ namespace Akka.ClientA
             {
                 System.Console.WriteLine($"Actor A: received {nameof(SomeMessage)}");
                 this.Publish($"{args}");
+                System.Console.WriteLine($"Actor A: forwarding message");
+                this.Publish($"{args}");
+                System.Console.WriteLine($"Actor A: forwarding message");
             });
 
             this.SubscribeFor<OtherMessage>();

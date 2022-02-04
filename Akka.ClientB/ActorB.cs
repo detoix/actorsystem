@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Akka.Contracts;
 
 namespace Akka.ClientB
@@ -13,6 +14,11 @@ namespace Akka.ClientB
             this.Receive<string>(args => 
             {
                 System.Console.WriteLine($"Actor B: received {args}");
+                for (int i = 0; i < 3; i++)
+                {
+                    System.Console.WriteLine($"Actor B: working with {args}, {3 - i}...");
+                    Thread.Sleep(1000);
+                }
             });
 
             this.Receive<AnotherMessage>(args => 
